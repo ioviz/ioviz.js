@@ -1,45 +1,28 @@
-gulp = require "gulp"
-gulp_util = require "gulp-util"
-main_bower_files = require "main-bower-files"
+gulp  = require "gulp"
 bower = require "bower"
-uglify = require "gulp-uglify"
-cond = require "gulp-if"
-coffee = require "gulp-coffee"
-concat = require "gulp-concat"
-del = require "del"
 phantomochajs = require "phantomochajs"
 
-isRelease = ! gulp_util.env.release?
-
 # gulp bower
-gulp.task "bower", ["clean"], -
+gulp.task "bower", (done)->
   bower.commands.install().on "end", ->
-    gulp.src main_bower_files()
-      .pipe cond isRelease, uglify({preserveComments: "some"})
-      .pipe gulp.dest "tmp/js/lib"
-
-# gulp coffee
-gulp.task "coffee", ["clean"], ->
-  gulp.src(["src/coffee/**/*.coffee"])
-    .pipe coffee()
-    .pipe cond isRelease, uglify({preserveComments: "some"})
-    .pipe gulp.dest "tmp/js/ioviz"
-
-# gulp min
-gulp.task "minify", ["bower", "coffee"], ->
-  gulp.src(["tmp/js/**/*.js"])
-    .pipe concat("ioviz.js")
-    .pipe gulp.dest "dist/"
-
-# gulp clean
-gulp.task "clean", del.bind null, [
-  "tmp/"
-]
+    done()
+  return undefined
 
 # gulp test
-gulp.task "test", ->
+gulp.task "test", ["bower"], ->
   gulp.src ["spec/spec_helper.coffee", "spec/**/*_spec.coffee"]
-    .pipe phantomochajs()
+    .pipe phantomochajs(
+      # server: true
+      amd_glob: true
+      dependencies: [
+        "/bower_components/requirejs/require.js"
+      ]
+      test_dependencies: [
+        "/bower_components/mocha/mocha.js"
+        "/bower_components/chai/chai.js"
+      ]
+      mocha_css_url: "/bower_components/mocha/mocha.css"
+    )
 
 # gulp watch
 gulp.task "watch", ->
@@ -52,17 +35,4 @@ gulp.task "watch", ->
       "test"
     ]
   )
-
-# gulp build
-gulp.task "build", [
-  "clean"
-  "bower"
-  "coffee"
-  "minify"
-]
-
-# gulp
-gulp.task "default", [
-  "build"
-]
 

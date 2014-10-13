@@ -1,14 +1,22 @@
 describe "GraphView", ->
+
   load_modules(
     "app/views/graph_view"
+    "app/models/graph/*"
   )
 
   context "create graph", ->
 
-  context "create instance", ->
     before ->
-      @instance = new GraphView
+      @graph = new Graph::GraphInterface
 
-    it "", ->
-      console.log @instance.render()
+    context "create instance", ->
+
+      before ->
+        @instance = new GraphView(
+          model: @graph
+        )
+
+      it "is instance of GraphView", ->
+        expect(@instance).to.instanceof GraphView
 
