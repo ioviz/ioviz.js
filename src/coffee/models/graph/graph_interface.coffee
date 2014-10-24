@@ -8,21 +8,24 @@ define(
     Errors
   )->
     class GraphInterface extends Backbone.Model
-      constructor: ->
-        @numVertices = 0
-        @numEdges = 0
-        @initialize()
+      defaults: ->
+        numVertices: 0
+        numEdges: 0
 
-      initialize: ->
+      getNumVertices: ->
+        @get "numVertices"
+
+      getNumEdges: ->
+        @get "numEdges"
 
       setNumVertices: (numVertices)->
-        @numVertices = numVertices
+        @set "numVertices", numVertices
 
       setNumEdges: (numEdges)->
-        @numEdges = numEdges
+        @set "numEdges", numEdges
 
       forNumEdges: (func)->
-        for i in [1..@numEdges]
+        for i in [1..@getNumEdges()]
           func(i)
 
       addEdge: (new_edge)->

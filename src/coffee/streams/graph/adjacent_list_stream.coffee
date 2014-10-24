@@ -18,9 +18,9 @@ define(
           stream.flow "data", new Tokenizer(input), new AdjacentList
         stream
 
-      @disableDirection: (options)->
+      @directed: (flag)->
         new class GetNumVertices extends AdjacentListStream
           onData: (tokenizer, graph)->
-            graph.disableDirection()
+            graph.setDirection(flag)
             @flow "data", tokenizer, graph
 )

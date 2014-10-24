@@ -17,15 +17,15 @@ describe "AdjacentListStream", ->
 
     it "test", (done)->
       AdjacentListStream.src(@input)
-        .pipe AdjacentListStream.disableDirection()
-        .pipe GraphStream.getNumVertices()
-        .pipe GraphStream.getNumEdges()
-        .pipe GraphStream.getEdges()
+        .pipe AdjacentListStream.directed(false)
+        .pipe GraphStream.numVertices()
+        .pipe GraphStream.numEdges()
+        .pipe GraphStream.edges()
         .pipe new class Dummy extends StreamBase
           initialize: =>
             @on "data", (tokenizer, graph)=>
-              expect(graph.numVertices).to.eq 3
-              expect(graph.numEdges).to.eq 2
+              expect(graph.getNumVertices()).to.eq 3
+              expect(graph.getNumEdges()).to.eq 2
               expect(graph.hasEdge(1, 2)).to.be.ok
               expect(graph.hasEdge(2, 3)).to.be.ok
               expect(graph.hasEdge(2, 1)).to.be.ok

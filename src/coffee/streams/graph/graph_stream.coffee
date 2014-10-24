@@ -7,20 +7,20 @@ define(
   )->
     class GraphStream extends StreamBase
 
-      @getNumVertices: (options)->
-        new class GetNumVertices extends GraphStream
+      @numVertices: (options)->
+        new class NumVertices extends GraphStream
           onData: (tokenizer, graph)->
             graph.setNumVertices tokenizer.nextInt()
             @flow "data", tokenizer, graph
 
-      @getNumEdges: (options)->
-        new class GetNumEdges extends GraphStream
+      @numEdges: (options)->
+        new class NumEdges extends GraphStream
           onData: (tokenizer, graph)->
             graph.setNumEdges tokenizer.nextInt()
             @flow "data", tokenizer, graph
 
-      @getEdges: (options)->
-        new class GetEdges extends GraphStream
+      @edges: (options)->
+        new class Edges extends GraphStream
           onData: (tokenizer, graph)->
             graph.forNumEdges ->
               edge = {}

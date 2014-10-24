@@ -25,6 +25,6 @@ define(
       hasEdge: (from, to)->
         _(@edges[from]).some (edge)-> edge.to == to
 
-      disableDirection: ->
+      setDirection: ->
         @direction = false
 )
