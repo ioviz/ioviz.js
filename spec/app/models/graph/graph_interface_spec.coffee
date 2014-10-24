@@ -1,21 +1,21 @@
 describe "GraphInterface", ->
 
   load_modules(
-    "app/models/graph/*"
-    "app/utils/*"
+    "app/models/graph/graph_interface"
+    "app/utils/errors"
   )
 
   context "create instance", ->
 
     before ->
-      @instance = new Graph::GraphInterface
+      @instance = new GraphInterface
 
-    it "is not implemented #add_edge()", ->
+    it "is not implemented #addEdge()", ->
       expect(
         =>
-          @instance.add_edge(
+          @instance.addEdge(
             from: 1
             to: 2
           )
-      ).to.throw Utils::Errors::NOT_IMPLEMENT
+      ).to.throw Errors::NOT_IMPLEMENT
 
