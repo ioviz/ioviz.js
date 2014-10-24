@@ -1,11 +1,26 @@
 define(
   [
+    "app/streams/base/stream_base"
     "app/models/graph/adjacent_list"
-    "app/streams/base/*"
+    "app/utils/tokenizer"
+    "app/utils/next_tick"
   ]
   (
+    StreamBase
     AdjacentList
-    Base
+    Tokenizer
+    nextTick
   )->
-    class AdjacentListStream extends Base::ReadableStream
+    class AdjacentListStream extends StreamBase
+      @src: (input)->
+        stream = new AdjacentListStream
+        nextTick ->
+          stream.flow "data", new Tokenizer(input), new AdjacentList
+        stream
+
+      @disableDirection: (options)->
+        new class GetNumVertices extends AdjacentListStream
+          onData: (tokenizer, graph)->
+            graph.disableDirection()
+            @flow "data", tokenizer, graph
 )

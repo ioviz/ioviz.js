@@ -1,13 +1,33 @@
 define(
   [
     "backbone"
-    "app/utils/*"
+    "app/utils/errors"
   ]
   (
     Backbone
-    Utils
+    Errors
   )->
     class GraphInterface extends Backbone.Model
-      add_edge: (new_edge)->
-        throw Utils::Errors::NOT_IMPLEMENT
+      constructor: ->
+        @numVertices = 0
+        @numEdges = 0
+        @initialize()
+
+      initialize: ->
+
+      setNumVertices: (numVertices)->
+        @numVertices = numVertices
+
+      setNumEdges: (numEdges)->
+        @numEdges = numEdges
+
+      forNumEdges: (func)->
+        for i in [1..@numEdges]
+          func(i)
+
+      addEdge: (new_edge)->
+        throw Errors::NOT_IMPLEMENT
+
+      hasEdge: (from, to)->
+        throw Errors::NOT_IMPLEMENT
 )
