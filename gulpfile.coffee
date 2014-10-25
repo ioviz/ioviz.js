@@ -1,6 +1,8 @@
 gulp  = require "gulp"
 bower = require "bower"
+concat = require "gulp-concat"
 phantomochajs = require "phantomochajs"
+amdOptimizer = require "amd-optimizer"
 
 # gulp bower
 gulp.task "bower", (done)->
@@ -35,4 +37,34 @@ gulp.task "watch", ->
       "test"
     ]
   )
+
+gulp.task "requirejs-config.js", ->
+  requirejsConfig = require("./lib/requirejs-config")
+  gulp.src ["bower_components/*"]
+    .pipe requirejsConfig("requirejs-config.js")
+    .pipe gulp.dest("tmp/")
+
+gulp.task "require-all.js", ->
+  requireAll = require("./lib/require-all")
+  gulp.src ["src/coffee/**/*.coffee"]
+    .pipe requireAll(
+      "require-all.js"
+      {
+        baseUrl: "src/coffee"
+        prefix: "app"
+      }
+    )
+    .pipe gulp.dest("tmp/")
+
+# gulp ioviz.js
+gulp.task "ioviz.js", ["bower", "requirejs-config.js", "require-all.js"], ->
+  gulp.src ["tmp/requirejs-config.js", "tmp/require-all.js"]
+    .pipe amdOptimizer(
+      "backbone/backbone"
+      {
+        configFile: gulp.src("tmp/requirejs-config.js")
+      }
+    )
+    .pipe concat("ioviz.js")
+    .pipe gulp.dest("dist/")
 
