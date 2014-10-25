@@ -10,6 +10,7 @@ define(
     Errors
   )->
     class StreamBase
+
       constructor: ->
         @events = {}
         _(@events).extend Backbone.Events

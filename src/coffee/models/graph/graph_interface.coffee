@@ -8,9 +8,11 @@ define(
     Errors
   )->
     class GraphInterface extends Backbone.Model
+
       defaults: ->
         numVertices: 0
         numEdges: 0
+        directedFlag: false
 
       getNumVertices: ->
         @get "numVertices"
@@ -18,11 +20,17 @@ define(
       getNumEdges: ->
         @get "numEdges"
 
+      getDirectedFlag: ->
+        @get "directedFlag"
+
       setNumVertices: (numVertices)->
         @set "numVertices", numVertices
 
       setNumEdges: (numEdges)->
         @set "numEdges", numEdges
+
+      setDirectedFlag: (flag)->
+        @set "directedFlag", flag
 
       forNumEdges: (func)->
         for i in [1..@getNumEdges()]

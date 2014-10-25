@@ -29,4 +29,10 @@ define(
               graph.addEdge edge
             @flow "data", tokenizer, graph
 
+      @directed: (flag)->
+        new class GetNumVertices extends GraphStream
+          onData: (tokenizer, graph)->
+            graph.setDirectedFlag(flag)
+            @flow "data", tokenizer, graph
+
 )

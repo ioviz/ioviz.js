@@ -12,15 +12,10 @@ define(
     nextTick
   )->
     class AdjacentListStream extends StreamBase
+
       @src: (input)->
         stream = new AdjacentListStream
         nextTick ->
           stream.flow "data", new Tokenizer(input), new AdjacentList
         stream
-
-      @directed: (flag)->
-        new class GetNumVertices extends AdjacentListStream
-          onData: (tokenizer, graph)->
-            graph.setDirection(flag)
-            @flow "data", tokenizer, graph
 )
