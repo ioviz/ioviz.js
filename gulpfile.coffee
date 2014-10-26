@@ -4,14 +4,13 @@ bower   = require "bower"
 coffee  = require "gulp-coffee"
 concat  = require "gulp-concat"
 uglify  = require "gulp-uglify"
-cond    = require "gulp-if"
 path    = require "path"
 glob    = require "glob"
+bump    = require "gulp-bump"
+git     = require "gulp-git"
 phantomochajs  = require "phantomochajs"
 amdOptimize    = require "amd-optimize"
 mainBowerFiles = require "main-bower-files"
-
-isRelease = gutil.env.release?
 
 gulp.task "bower", (done)->
   bower.commands.install().on "end", ->
@@ -88,6 +87,22 @@ gulp.task "ioviz.js", ["app", "bower", "config"], ->
       }
     )
     .pipe concat("ioviz.js")
-    .pipe cond isRelease, uglify() # gulp ioviz.js --release
     .pipe gulp.dest("dist/")
+
+gulp.task "ioviz.min.js", ["ioviz.js"], ->
+  gulp.src(["dist/ioviz.js"])
+    .pipe uglify()
+    .pipe concat("ioviz.min.js")
+    .pipe gulp.dest("dist/")
+
+
+gulp.task "bump", ->
+  gulp.src(["package.json", "bower.json"])
+    .pipe bump(type: "patch")
+    .pipe gulp.dest("./")
+
+gulp.task "dist", ["ioviz.js", "ioviz.min.js"], ->
+  gulp.src(["dist/*"])
+    .pipe git.add()
+    .pipe git.commit("bump version into #{require("./package.json")["version"]}")
 
