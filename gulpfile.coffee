@@ -101,8 +101,11 @@ gulp.task "bump", ->
     .pipe bump(type: "patch")
     .pipe gulp.dest("./")
 
-gulp.task "dist", ["ioviz.js", "ioviz.min.js"], ->
-  gulp.src(["dist/*"])
-    .pipe git.add()
-    .pipe git.commit("bump version into #{require("./package.json")["version"]}")
+gulp.task "dist", ["ioviz.js", "ioviz.min.js", "bump"], ->
+  version = require("./package.json")["version"]
+  gulp.src(["dist/*", "package.json", "bower.json"])
+    .pipe git.add(args: '-f')
+    .pipe git.commit("bump version into #{version}")
+    .on "end", ->
+      git.tag(version, version, ->)
 
