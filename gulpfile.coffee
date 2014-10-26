@@ -100,6 +100,7 @@ gulp.task "bump", ->
     .pipe bump(type: "patch")
     .pipe gulp.dest("./")
 
+# 1.2.3 => 1.2.4
 gulp.task "release/patch", ["build", "bump"], ->
   version = require("./package.json")["version"]
   gulp.src(["dist/*", "package.json", "bower.json"])
