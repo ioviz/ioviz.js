@@ -95,13 +95,12 @@ gulp.task "ioviz.min.js", ["ioviz.js"], ->
     .pipe concat("ioviz.min.js")
     .pipe gulp.dest("dist/")
 
-
 gulp.task "bump", ->
   gulp.src(["package.json", "bower.json"])
     .pipe bump(type: "patch")
     .pipe gulp.dest("./")
 
-gulp.task "build", ["ioviz.js", "ioviz.min.js", "bump"], ->
+gulp.task "release/patch", ["build", "bump"], ->
   version = require("./package.json")["version"]
   gulp.src(["dist/*", "package.json", "bower.json"])
     .pipe git.add(args: '-f')
@@ -109,3 +108,7 @@ gulp.task "build", ["ioviz.js", "ioviz.min.js", "bump"], ->
     .on "end", ->
       git.tag(version, version, ->)
 
+gulp.task "build", [
+  "ioviz.js"
+  "ioviz.min.js"
+]
