@@ -2,13 +2,13 @@ describe "GraphView", ->
 
   load_modules(
     "app/views/graph_view"
-    "app/models/graph/*"
+    "app/models/graph/graph_interface"
   )
 
   context "create graph", ->
 
     before ->
-      @graph = new Graph::GraphInterface
+      @graph = new GraphInterface
 
     context "create instance", ->
 
