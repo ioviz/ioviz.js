@@ -101,7 +101,7 @@ gulp.task "bump", ->
     .pipe bump(type: "patch")
     .pipe gulp.dest("./")
 
-gulp.task "dist", ["ioviz.js", "ioviz.min.js", "bump"], ->
+gulp.task "build", ["ioviz.js", "ioviz.min.js", "bump"], ->
   version = require("./package.json")["version"]
   gulp.src(["dist/*", "package.json", "bower.json"])
     .pipe git.add(args: '-f')
