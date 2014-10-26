@@ -29,6 +29,17 @@ describe "GraphView", ->
 
         context "find svg", ->
 
+          before ->
+            @svg = @instance.$el.find("svg")
+
           it "has one svg element", ->
-            expect(@instance.$el.find("svg").size()).to.eq 1
+            expect(@svg.size()).to.eq 1
+
+          context "find lines", ->
+
+            before ->
+              @lines = @svg.find("line")
+
+            it "has two line", ->
+              expect(@lines.length).to.eq 2
 

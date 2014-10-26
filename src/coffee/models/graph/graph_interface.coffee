@@ -46,10 +46,13 @@ define(
         @set "edges", JSON.stringify(edges) # TODO: improve
 
       repeatNumEdges: (func)->
+        func(i) for i in [0..@getNumEdges() - 1]
+
+      repeatNumVertices: (func)->
         if @getZeroIndexedFlag()
-          list = [0..@getNumEdges() - 1]
+          list = [0..@getNumVertices() - 1]
         else
-          list = [1..@getNumEdges()]
+          list = [1..@getNumVertices()]
         func(i) for i in list
 
       addEdge: (new_edge)->

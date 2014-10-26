@@ -77,6 +77,17 @@ gulp.task "config", [
   "require-all.js"
 ]
 
+gulp.task "ioviz.test.js", ["app", "bower", "config"], ->
+  gulp.src(["tmp/js/**/*.js"])
+    .pipe amdOptimize(
+      "config/require-all"
+      {
+        configFile: "tmp/js/config/requirejs-config.js"
+      }
+    )
+    .pipe concat("ioviz.test.js")
+    .pipe gulp.dest("tmp/js/test/")
+
 gulp.task "ioviz.js", ["app", "bower", "config"], ->
   gulp.src(["tmp/js/**/*.js"])
     .pipe amdOptimize(
