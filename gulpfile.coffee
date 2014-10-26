@@ -10,8 +10,7 @@ gulp.task "bower", (done)->
   bower.commands.install().on "end", ->
     gulp.src mainBowerFiles()
       .pipe gulp.dest("tmp/js/bower/")
-      .on "end", ->
-        done()
+      .on "end", -> done()
   return undefined
 
 gulp.task "test", ["bower"], ->
@@ -66,7 +65,12 @@ gulp.task "require-all.js", ->
     )
     .pipe gulp.dest("tmp/js/config/")
 
-gulp.task "ioviz.js", ["app", "bower", "requirejs-config.js", "require-all.js"], ->
+gulp.task "config", [
+  "requirejs-config.js"
+  "require-all.js"
+]
+
+gulp.task "ioviz.js", ["app", "bower", "config"], ->
   gulp.src(["tmp/js/**/*.js"])
     .pipe amdOptimize(
       "config/require-all"
