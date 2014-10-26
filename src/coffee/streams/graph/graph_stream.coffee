@@ -22,7 +22,7 @@ define(
       @edges: (options)->
         new class Edges extends GraphStream
           onData: (tokenizer, graph)->
-            graph.forNumEdges ->
+            graph.repeatNumEdges ->
               edge = {}
               edge.from = tokenizer.nextInt()
               edge.to = tokenizer.nextInt()

@@ -10,27 +10,29 @@ define(
     class AdjacentList extends GraphInterface
 
       initialize: ->
-        @edges = {}
+        @setEdges {}
         @direction = true
 
       addEdge: (edge)->
-        @_addEdge edge
+        edges = @getEdges()
+        @_addEdge edges, edge
         unless @getDirectedFlag()
-          @_addRevEdge edge
+          @_addRevEdge edges, edge
+        @setEdges edges
 
       hasEdge: (from, to)->
-        _(@edges[from]).some (edge)-> edge.to == to
+        _(@getEdges()[from]).some (edge)-> edge.to == to
 
       # private methods
 
-      _addEdge: (edge)->
-        @edges[edge.from] ||= []
-        @edges[edge.from].push edge
+      _addEdge: (edges, edge)->
+        edges[edge.from] ||= []
+        edges[edge.from].push edge
 
-      _addRevEdge: (edge)->
+      _addRevEdge: (edges, edge)->
         revEdge = _.clone(edge)
         revEdge.to = edge.from
         revEdge.from = edge.to
-        @edges[revEdge.from] ||= []
-        @edges[revEdge.from].push revEdge
+        edges[revEdge.from] ||= []
+        edges[revEdge.from].push revEdge
 )

@@ -13,6 +13,7 @@ define(
         numVertices: 0
         numEdges: 0
         directedFlag: false
+        zeroIndexedFlag: false
 
       getNumVertices: ->
         @get "numVertices"
@@ -23,6 +24,12 @@ define(
       getDirectedFlag: ->
         @get "directedFlag"
 
+      getZeroIndexedFlag: ->
+        @get "zeroIndexed"
+
+      getEdges: ->
+        JSON.parse @get("edges")
+
       setNumVertices: (numVertices)->
         @set "numVertices", numVertices
 
@@ -32,9 +39,18 @@ define(
       setDirectedFlag: (flag)->
         @set "directedFlag", flag
 
-      forNumEdges: (func)->
-        for i in [1..@getNumEdges()]
-          func(i)
+      setZeroIndexedFlag: (flag)->
+        @set "zeroIndexed", flag
+
+      setEdges: (edges)->
+        @set "edges", JSON.stringify(edges) # TODO: improve
+
+      repeatNumEdges: (func)->
+        if @getZeroIndexedFlag()
+          list = [0..@getNumEdges() - 1]
+        else
+          list = [1..@getNumEdges()]
+        func(i) for i in list
 
       addEdge: (new_edge)->
         throw Errors::NOT_IMPLEMENT

@@ -24,6 +24,7 @@ gulp.task "test", ["bower"], ->
     .pipe phantomochajs(
       dependencies: [
         "/bower_components/requirejs/require.js"
+        "/tmp/js/config/requirejs-config.js"
       ]
       test_dependencies: [
         "/bower_components/mocha/mocha.js"

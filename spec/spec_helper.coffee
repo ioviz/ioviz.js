@@ -1,10 +1,7 @@
-
 requirejs.config(
+  baseUrl: "/"
   paths:
-    "app": "src/coffee"
-    "jquery": "bower_components/jquery/dist/jquery"
-    "underscore": "bower_components/underscore/underscore"
-    "backbone": "bower_components/backbone/backbone"
+    "app": "/src/coffee"
 )
 
 @expect = chai.expect

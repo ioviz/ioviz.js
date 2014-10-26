@@ -2,13 +2,18 @@ describe "GraphView", ->
 
   load_modules(
     "app/views/graph_view"
-    "app/models/graph/graph_interface"
+    "app/models/graph/adjacent_list"
   )
 
   context "create graph", ->
 
     before ->
-      @graph = new GraphInterface
+      @graph = new AdjacentList
+      @graph.setNumVertices 3
+      @graph.setZeroIndexedFlag true
+      @graph.setNumEdges 2
+      @graph.addEdge {from: 0, to: 1}
+      @graph.addEdge {from: 1, to: 2}
 
     context "create instance", ->
 
@@ -17,6 +22,13 @@ describe "GraphView", ->
           model: @graph
         )
 
-      it "is instance of GraphView", ->
-        expect(@instance).to.instanceof GraphView
+      context "call render", ->
+
+        before ->
+          @instance.render()
+
+        context "find svg", ->
+
+          it "has one svg element", ->
+            expect(@instance.$el.find("svg").size()).to.eq 1
 
