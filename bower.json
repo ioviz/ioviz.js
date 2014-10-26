@@ -4,6 +4,9 @@
   "authors": [
     "Hiroyuki Sano <sh19910711 at gmail.com>"
   ],
+  "main": [
+    "dist/ioviz.js"
+  ],
   "license": "MIT",
   "ignore": [
     "**/.*",
