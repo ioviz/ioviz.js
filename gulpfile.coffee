@@ -1,10 +1,17 @@
 gulp    = require "gulp"
+gutil   = require "gulp-util"
 bower   = require "bower"
 coffee  = require "gulp-coffee"
 concat  = require "gulp-concat"
-phantomochajs   = require "phantomochajs"
+uglify  = require "gulp-uglify"
+cond    = require "gulp-if"
+path    = require "path"
+glob    = require "glob"
+phantomochajs  = require "phantomochajs"
 amdOptimize    = require "amd-optimize"
-mainBowerFiles  = require "main-bower-files"
+mainBowerFiles = require "main-bower-files"
+
+isRelease = gutil.env.release?
 
 gulp.task "bower", (done)->
   bower.commands.install().on "end", ->
@@ -76,8 +83,11 @@ gulp.task "ioviz.js", ["app", "bower", "config"], ->
       "config/require-all"
       {
         configFile: "tmp/js/config/requirejs-config.js"
+        exclude: glob.sync("tmp/js/bower/*.js").map (module)->
+          path.basename(module).slice 0, -1 * ".js".length
       }
     )
     .pipe concat("ioviz.js")
+    .pipe cond isRelease, uglify() # gulp ioviz.js --release
     .pipe gulp.dest("dist/")
 
