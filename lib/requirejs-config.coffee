@@ -8,11 +8,11 @@ requireAll = (filename, options)->
   pathlist = []
 
   toModulePath = (file)->
-    modulepath = path.relative(cwd, file.path)
-    if /\./.test(path.basename(modulepath))
-      extname = path.extname(module_path)
-      modulepath = modulepath.slice 0, -1 * extname.length
-    modulepath
+    modulePath = path.relative(cwd, file.path)
+    if /\./.test(path.basename(modulePath))
+      extName = path.extname(modulePath)
+      modulePath = modulePath.slice 0, -1 * extName.length
+    modulePath
 
   stream = through.obj(
     # on data
@@ -31,7 +31,9 @@ requireAll = (filename, options)->
         .map (module)->
           "'#{module.name}': '#{module.path}'"
         .join(",")
-      result_contents += "}});"
+      result_contents += "}"
+      result_contents += ",baseUrl: '#{options.baseUrl}'" if options && options.baseUrl
+      result_contents += "});"
 
       @push new File(
         contents: new Buffer(result_contents)
