@@ -9,9 +9,10 @@ glob    = require "glob"
 bump    = require "gulp-bump"
 git     = require "gulp-git"
 sass    = require "gulp-ruby-sass"
-phantomochajs  = require "phantomochajs"
-amdOptimize    = require "amd-optimize"
-mainBowerFiles = require "main-bower-files"
+phantomochajs   = require "phantomochajs"
+amdOptimize     = require "amd-optimize"
+mainBowerFiles  = require "main-bower-files"
+minifyCss       = require "gulp-minify-css"
 
 gulp.task "bower", (done)->
   bower.commands.install().on "end", ->
@@ -142,7 +143,7 @@ gulp.task "ioviz.css", ["main.css"], ->
 
 gulp.task "ioviz.min.css", ["ioviz.css"], ->
   gulp.src(["dist/ioviz.css"])
-    .pipe uglify()
+    .pipe minifyCss()
     .pipe concat("ioviz.min.css")
     .pipe gulp.dest("dist/")
 
