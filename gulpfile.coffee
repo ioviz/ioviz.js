@@ -140,6 +140,12 @@ gulp.task "ioviz.css", ["main.css"], ->
     .pipe concat "ioviz.css"
     .pipe gulp.dest("dist/")
 
+gulp.task "ioviz.min.css", ["ioviz.css"], ->
+  gulp.src(["dist/ioviz.css"])
+    .pipe uglify()
+    .pipe concat("ioviz.min.css")
+    .pipe gulp.dest("dist/")
+
 gulp.task "bump", ->
   gulp.src(["package.json", "bower.json"])
     .pipe bump(type: "patch")
@@ -157,4 +163,6 @@ gulp.task "release/patch", ["build", "bump"], ->
 gulp.task "build", [
   "ioviz.js"
   "ioviz.min.js"
+  "ioviz.css"
+  "ioviz.min.css"
 ]
