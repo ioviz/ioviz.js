@@ -45,6 +45,9 @@ define(
       setEdges: (edges)->
         @set "edges", JSON.stringify(edges) # TODO: improve
 
+      isZeroIndexed: ->
+        @get "zeroIndexed"
+
       repeatNumEdges: (func)->
         func(i) for i in [0..@getNumEdges() - 1]
 
