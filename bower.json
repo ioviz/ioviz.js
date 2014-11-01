@@ -5,7 +5,8 @@
     "Hiroyuki Sano <sh19910711 at gmail.com>"
   ],
   "main": [
-    "dist/ioviz.js"
+    "dist/ioviz.js",
+    "dist/ioviz.css"
   ],
   "license": "MIT",
   "ignore": [
