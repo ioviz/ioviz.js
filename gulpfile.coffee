@@ -8,6 +8,7 @@ path    = require "path"
 glob    = require "glob"
 bump    = require "gulp-bump"
 git     = require "gulp-git"
+sass    = require "gulp-ruby-sass"
 phantomochajs  = require "phantomochajs"
 amdOptimize    = require "amd-optimize"
 mainBowerFiles = require "main-bower-files"
@@ -19,7 +20,7 @@ gulp.task "bower", (done)->
       .on "end", -> done()
   return undefined
 
-gulp.task "test", ["bower"], ->
+gulp.task "test", ["bower", "requirejs-config.js"], ->
   gulp.src ["spec/spec_helper.coffee", "spec/**/*_spec.coffee"]
     .pipe phantomochajs(
       dependencies: [
@@ -41,6 +42,23 @@ gulp.task "watch", ->
     ]
     [
       "test"
+    ]
+  )
+  gulp.watch(
+    [
+      "src/coffee/**/*.coffee"
+    ]
+    [
+      "ioviz.js"
+      "ioviz.test.js"
+    ]
+  )
+  gulp.watch(
+    [
+      "src/sass/**/*.sass"
+    ]
+    [
+      "ioviz.css"
     ]
   )
 
@@ -77,6 +95,11 @@ gulp.task "config", [
   "require-all.js"
 ]
 
+gulp.task "server", ["ioviz.test.js"], ->
+  http = require("http")
+  webServer = require("./lib/web_server")
+  http.createServer(webServer).listen(19292)
+
 gulp.task "ioviz.test.js", ["app", "bower", "config"], ->
   gulp.src(["tmp/js/**/*.js"])
     .pipe amdOptimize(
@@ -105,6 +128,16 @@ gulp.task "ioviz.min.js", ["ioviz.js"], ->
   gulp.src(["dist/ioviz.js"])
     .pipe uglify()
     .pipe concat("ioviz.min.js")
+    .pipe gulp.dest("dist/")
+
+gulp.task "main.css", ->
+  gulp.src(["src/sass/main.sass"])
+    .pipe sass()
+    .pipe gulp.dest("tmp/css/")
+
+gulp.task "ioviz.css", ["main.css"], ->
+  gulp.src(["tmp/css/main.css"])
+    .pipe concat "ioviz.css"
     .pipe gulp.dest("dist/")
 
 gulp.task "bump", ->

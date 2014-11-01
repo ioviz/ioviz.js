@@ -44,13 +44,104 @@
             child.__super__ = parent.prototype;
             return child;
         };
-    define('app/views/graph_view', ['backbone'], function (Backbone) {
+    define('app/views/graph_view', [
+        'underscore',
+        'backbone',
+        'd3'
+    ], function (_, Backbone, d3) {
         var GraphView;
         return GraphView = function (_super) {
             __extends(GraphView, _super);
             function GraphView() {
                 return GraphView.__super__.constructor.apply(this, arguments);
             }
+            GraphView.prototype.tagName = 'div';
+            GraphView.prototype.initialize = function (options) {
+                var drag, edges, height, modelEdges, nodes, width;
+                width = options.width || 640;
+                height = options.height || 480;
+                this.svg = d3.select(this.el).append('svg');
+                this.svg.attr('width', '' + width + 'px').attr('height', '' + height + 'px');
+                nodes = [];
+                this.model.repeatNumVertices(function (_this) {
+                    return function (i) {
+                        return nodes.push({
+                            name: '' + i,
+                            x: 300,
+                            y: 300
+                        });
+                    };
+                }(this));
+                modelEdges = this.model.getEdges();
+                edges = [];
+                this.model.repeatNumVertices(function (_this) {
+                    return function (i) {
+                        return _(modelEdges[i]).each(function (edge) {
+                            return edges.push({
+                                source: edge.from - 1,
+                                target: edge.to - 1
+                            });
+                        });
+                    };
+                }(this));
+                this.layout = d3.layout.force().nodes(nodes).links(edges).size([
+                    width,
+                    height
+                ]).linkDistance(40).chargeDistance(-400).start();
+                this.layout.on('tick', function (_this) {
+                    return function () {
+                        _this.edges.attr('x1', function (d) {
+                            return d.source.x;
+                        }).attr('y1', function (d) {
+                            return d.source.y;
+                        }).attr('x2', function (d) {
+                            return d.target.x;
+                        }).attr('y2', function (d) {
+                            return d.target.y;
+                        });
+                        return _this.nodes.attr('x', function (d) {
+                            return d.x;
+                        }).attr('y', function (d) {
+                            return d.y;
+                        }).attr('transform', function (d) {
+                            return 'translate(' + d.x + ',' + d.y + ')';
+                        });
+                    };
+                }(this));
+                this.edges = this.svg.selectAll('.edge').data(edges, function (d) {
+                    return '' + d.source.name + '-' + d.target.name;
+                });
+                this.edges.enter().insert('line').attr('id', function (d) {
+                    return 'edge-' + d.source.name + '-' + d.target.name;
+                }).attr('class', 'edge').attr('x1', function (d) {
+                    return d.source.x;
+                }).attr('y1', function (d) {
+                    return d.source.y;
+                }).attr('x2', function (d) {
+                    return d.target.x;
+                }).attr('y2', function (d) {
+                    return d.target.y;
+                });
+                this.nodes = this.svg.selectAll('.node').data(nodes);
+                drag = this.layout.drag().on('dragstart', function (d) {
+                    return d3.select(this).classed('fixed', d.fixed = true);
+                });
+                this.nodes.enter().append('circle').attr('class', 'node').attr('id', function (d) {
+                    return 'node-' + d.name;
+                }).attr('x', function (d) {
+                    return d.x;
+                }).attr('y', function (d) {
+                    return d.y;
+                }).attr('r', 12).attr('transform', function (d) {
+                    return 'translate(' + d.x + ',' + d.y + ')';
+                }).on('dblclick', function (d) {
+                    return d3.select(this).classed('fixed', d.fixed = false);
+                }).call(drag);
+                return this.nodes.exit().remove();
+            };
+            GraphView.prototype.Render = function () {
+                return this;
+            };
             return GraphView;
         }(Backbone.View);
     });
@@ -83,7 +174,8 @@
                 return {
                     numVertices: 0,
                     numEdges: 0,
-                    directedFlag: false
+                    directedFlag: false,
+                    zeroIndexedFlag: false
                 };
             };
             GraphInterface.prototype.getNumVertices = function () {
@@ -95,6 +187,12 @@
             GraphInterface.prototype.getDirectedFlag = function () {
                 return this.get('directedFlag');
             };
+            GraphInterface.prototype.getZeroIndexedFlag = function () {
+                return this.get('zeroIndexed');
+            };
+            GraphInterface.prototype.getEdges = function () {
+                return JSON.parse(this.get('edges'));
+            };
             GraphInterface.prototype.setNumVertices = function (numVertices) {
                 return this.set('numVertices', numVertices);
             };
@@ -104,13 +202,45 @@
             GraphInterface.prototype.setDirectedFlag = function (flag) {
                 return this.set('directedFlag', flag);
             };
-            GraphInterface.prototype.forNumEdges = function (func) {
+            GraphInterface.prototype.setZeroIndexedFlag = function (flag) {
+                return this.set('zeroIndexed', flag);
+            };
+            GraphInterface.prototype.setEdges = function (edges) {
+                return this.set('edges', JSON.stringify(edges));
+            };
+            GraphInterface.prototype.repeatNumEdges = function (func) {
                 var i, _i, _ref, _results;
                 _results = [];
-                for (i = _i = 1, _ref = this.getNumEdges(); 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+                for (i = _i = 0, _ref = this.getNumEdges() - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
                     _results.push(func(i));
                 }
                 return _results;
+            };
+            GraphInterface.prototype.repeatNumVertices = function (func) {
+                var i, list, _i, _j, _k, _len, _ref, _ref1, _results, _results1, _results2;
+                if (this.getZeroIndexedFlag()) {
+                    list = function () {
+                        _results = [];
+                        for (var _i = 0, _ref = this.getNumVertices() - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; 0 <= _ref ? _i++ : _i--) {
+                            _results.push(_i);
+                        }
+                        return _results;
+                    }.apply(this);
+                } else {
+                    list = function () {
+                        _results1 = [];
+                        for (var _j = 1, _ref1 = this.getNumVertices(); 1 <= _ref1 ? _j <= _ref1 : _j >= _ref1; 1 <= _ref1 ? _j++ : _j--) {
+                            _results1.push(_j);
+                        }
+                        return _results1;
+                    }.apply(this);
+                }
+                _results2 = [];
+                for (_k = 0, _len = list.length; _k < _len; _k++) {
+                    i = list[_k];
+                    _results2.push(func(i));
+                }
+                return _results2;
             };
             GraphInterface.prototype.addEdge = function (new_edge) {
                 throw Errors.prototype.NOT_IMPLEMENT;
@@ -147,32 +277,35 @@
                 return AdjacentList.__super__.constructor.apply(this, arguments);
             }
             AdjacentList.prototype.initialize = function () {
-                this.edges = {};
+                this.setEdges({});
                 return this.direction = true;
             };
             AdjacentList.prototype.addEdge = function (edge) {
-                this._addEdge(edge);
+                var edges;
+                edges = this.getEdges();
+                this._addEdge(edges, edge);
                 if (!this.getDirectedFlag()) {
-                    return this._addRevEdge(edge);
+                    this._addRevEdge(edges, edge);
                 }
+                return this.setEdges(edges);
             };
             AdjacentList.prototype.hasEdge = function (from, to) {
-                return _(this.edges[from]).some(function (edge) {
+                return _(this.getEdges()[from]).some(function (edge) {
                     return edge.to === to;
                 });
             };
-            AdjacentList.prototype._addEdge = function (edge) {
-                var _base, _name;
-                (_base = this.edges)[_name = edge.from] || (_base[_name] = []);
-                return this.edges[edge.from].push(edge);
+            AdjacentList.prototype._addEdge = function (edges, edge) {
+                var _name;
+                edges[_name = edge.from] || (edges[_name] = []);
+                return edges[edge.from].push(edge);
             };
-            AdjacentList.prototype._addRevEdge = function (edge) {
-                var revEdge, _base, _name;
+            AdjacentList.prototype._addRevEdge = function (edges, edge) {
+                var revEdge, _name;
                 revEdge = _.clone(edge);
                 revEdge.to = edge.from;
                 revEdge.from = edge.to;
-                (_base = this.edges)[_name = revEdge.from] || (_base[_name] = []);
-                return this.edges[revEdge.from].push(revEdge);
+                edges[_name = revEdge.from] || (edges[_name] = []);
+                return edges[revEdge.from].push(revEdge);
             };
             return AdjacentList;
         }(GraphInterface);
@@ -345,7 +478,7 @@
                         return Edges.__super__.constructor.apply(this, arguments);
                     }
                     Edges.prototype.onData = function (tokenizer, graph) {
-                        graph.forNumEdges(function () {
+                        graph.repeatNumEdges(function () {
                             var edge;
                             edge = {};
                             edge.from = tokenizer.nextInt();

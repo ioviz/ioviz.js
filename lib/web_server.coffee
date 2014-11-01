@@ -8,6 +8,7 @@ app.set "view engine", "jade"
 app.set "views", path.join(__dirname, "views")
 
 app.use express.static(path.join(__dirname, "../tmp/js/"))
+app.use express.static(path.join(__dirname, "../dist/"))
 
 connectMincer = new ConnectMincer(
   root: path.join(__dirname)
@@ -21,4 +22,5 @@ app.use '/assets', connectMincer.createServer()
 app.get "/", (req, res)->
   res.render('index')
 
-app.listen(3000)
+
+module.exports = app

@@ -18,5 +18,8 @@ requirejs(
 
       graphView = new GraphView
         model: graph
+        width: 640
+        height: 480
+
       $("body").append graphView.render().el
 )

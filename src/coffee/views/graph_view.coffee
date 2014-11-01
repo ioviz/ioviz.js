@@ -12,56 +12,96 @@ define(
     class GraphView extends Backbone.View
       tagName: "div"
 
-      initialize: ->
-        @svg = d3.select(@el).append("svg")
+      initialize: (options)->
+        width   = options.width || 640
+        height  = options.height || 480
 
-        edges = @model.getEdges()
-        @nodes = []
+        @svg = d3
+          .select(@el)
+          .append("svg")
+
+        @svg
+          .attr "width", "#{width}px"
+          .attr "height", "#{height}px"
+
+        nodes = []
         @model.repeatNumVertices (i)=>
-          @nodes.push(
-            name: "##{i}"
+          nodes.push(
+            name: "#{i}"
+            x: 300
+            y: 300
           )
-        @links = []
+
+        modelEdges = @model.getEdges()
+        edges = []
         @model.repeatNumVertices (i)=>
-          _(edges[i]).each (edge)=>
-            @links.push(
-              source:
-                name: edge.from
-              target:
-                name: edge.to
+          _(modelEdges[i]).each (edge)=>
+            edges.push(
+              source: edge.from - 1
+              target: edge.to - 1
             )
 
         @layout = d3.layout
           .force()
-          .nodes @nodes
-          .links @links
-          .size [@width, @height]
-          .linkDistance 100
-          .chargeDistance 100
+          .nodes nodes
+          .links edges
+          .size [width, height]
+          .linkDistance 40
+          .chargeDistance -400
+          .start()
+        
+        @layout
           .on "tick", =>
-            @svg
-              .selectAll 'line'
+            @edges
               .attr "x1", (d)-> d.source.x
               .attr "y1", (d)-> d.source.y
               .attr "x2", (d)-> d.target.x
               .attr "y2", (d)-> d.target.y
 
-        @svg
-          .selectAll 'line'
-          .data @links, (d)-> "#{d.source.name}-#{d.target.name}"
+            @nodes
+              .attr "x", (d)-> d.x
+              .attr "y", (d)-> d.y
+              .attr "transform", (d)-> "translate(#{d.x},#{d.y})"
+
+        @edges = @svg
+          .selectAll '.edge'
+          .data edges, (d)-> "#{d.source.name}-#{d.target.name}"
+
+        @edges
           .enter()
-          .insert 'line', 'circle'
+          .insert "line"
+          .attr "id", (d)-> "edge-#{d.source.name}-#{d.target.name}"
+          .attr "class", "edge"
+          .attr "x1", (d)-> d.source.x
+          .attr "y1", (d)-> d.source.y
+          .attr "x2", (d)-> d.target.x
+          .attr "y2", (d)-> d.target.y
 
-        @svg
-          .selectAll 'node'
-          .data @nodes
+        @nodes = @svg
+          .selectAll '.node'
+          .data nodes
+
+        drag = @layout
+          .drag()
+          .on "dragstart", (d)->
+            d3.select(@).classed("fixed", d.fixed = true)
+
+        @nodes
           .enter()
-          .append 'node'
-          .append 'circle'
+          .append "circle"
+          .attr "class", "node"
+          .attr "id", (d)-> "node-#{d.name}"
+          .attr "x", (d)-> d.x
+          .attr "y", (d)-> d.y
+          .attr "r", 12
+          .attr "transform", (d)-> "translate(#{d.x},#{d.y})"
+          .on "dblclick", (d)-> d3.select(@).classed("fixed", d.fixed = false)
+          .call drag
 
-        console.log @$el.html()
+        @nodes
+          .exit()
+          .remove()
 
-      render: ->
-        @layout.start()
+      Render: ->
         return @
 )
