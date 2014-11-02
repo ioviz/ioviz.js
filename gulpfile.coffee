@@ -86,7 +86,6 @@ gulp.task "require-all.js", ->
       "require-all.js"
       {
         baseUrl: "src/coffee"
-        prefix: "ioviz"
       }
     )
     .pipe gulp.dest("tmp/js/config/")
