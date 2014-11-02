@@ -1,5 +1,5 @@
 (function () {
-    define('app/utils/errors', [], function () {
+    define('ioviz/utils/errors', [], function () {
         var Errors;
         return Errors = function () {
             function Errors() {
@@ -10,14 +10,14 @@
     });
 }.call(this));
 (function () {
-    define('app/utils/next_tick', [], function () {
+    define('ioviz/utils/next_tick', [], function () {
         return function (func) {
             return setTimeout(func, 0);
         };
     });
 }.call(this));
 (function () {
-    define('app/utils/tokenizer', [], function () {
+    define('ioviz/utils/tokenizer', [], function () {
         var Tokenizer;
         return Tokenizer = function () {
             function Tokenizer(text) {
@@ -44,7 +44,7 @@
             child.__super__ = parent.prototype;
             return child;
         };
-    define('app/views/graph_view', [
+    define('ioviz/views/graph_view', [
         'underscore',
         'backbone',
         'd3'
@@ -196,9 +196,9 @@
             child.__super__ = parent.prototype;
             return child;
         };
-    define('app/models/graph/graph_interface', [
+    define('ioviz/models/graph/graph_interface', [
         'backbone',
-        'app/utils/errors'
+        'ioviz/utils/errors'
     ], function (Backbone, Errors) {
         var GraphInterface;
         return GraphInterface = function (_super) {
@@ -305,9 +305,9 @@
             child.__super__ = parent.prototype;
             return child;
         };
-    define('app/models/graph/adjacent_list', [
+    define('ioviz/models/graph/adjacent_list', [
         'underscore',
-        'app/models/graph/graph_interface'
+        'ioviz/models/graph/graph_interface'
     ], function (_, GraphInterface) {
         var AdjacentList;
         return AdjacentList = function (_super) {
@@ -364,10 +364,10 @@
             child.__super__ = parent.prototype;
             return child;
         };
-    define('app/streams/base/stream_base', [
+    define('ioviz/streams/base/stream_base', [
         'underscore',
         'backbone',
-        'app/utils/errors'
+        'ioviz/utils/errors'
     ], function (_, Backbone, Errors) {
         var StreamBase;
         return StreamBase = function () {
@@ -436,11 +436,11 @@
             child.__super__ = parent.prototype;
             return child;
         };
-    define('app/streams/graph/adjacent_list_stream', [
-        'app/streams/base/stream_base',
-        'app/models/graph/adjacent_list',
-        'app/utils/tokenizer',
-        'app/utils/next_tick'
+    define('ioviz/streams/graph/adjacent_list_stream', [
+        'ioviz/streams/base/stream_base',
+        'ioviz/models/graph/adjacent_list',
+        'ioviz/utils/tokenizer',
+        'ioviz/utils/next_tick'
     ], function (StreamBase, AdjacentList, Tokenizer, nextTick) {
         var AdjacentListStream;
         return AdjacentListStream = function (_super) {
@@ -474,7 +474,7 @@
             child.__super__ = parent.prototype;
             return child;
         };
-    define('app/streams/graph/graph_stream', ['app/streams/base/stream_base'], function (StreamBase) {
+    define('ioviz/streams/graph/graph_stream', ['ioviz/streams/base/stream_base'], function (StreamBase) {
         var GraphStream;
         return GraphStream = function (_super) {
             __extends(GraphStream, _super);
@@ -561,9 +561,9 @@
             child.__super__ = parent.prototype;
             return child;
         };
-    define('app/streams/text/text_stream', [
-        'app/streams/base/stream_base',
-        'app/utils/next_tick'
+    define('ioviz/streams/text/text_stream', [
+        'ioviz/streams/base/stream_base',
+        'ioviz/utils/next_tick'
     ], function (StreamBase, nextTick) {
         var TextStream;
         return TextStream = function (_super) {
@@ -577,16 +577,16 @@
 }.call(this));
 (function () {
     define('config/require-all', [
-        'app/utils/errors',
-        'app/utils/next_tick',
-        'app/utils/tokenizer',
-        'app/views/graph_view',
-        'app/models/graph/adjacent_list',
-        'app/models/graph/graph_interface',
-        'app/streams/base/stream_base',
-        'app/streams/graph/adjacent_list_stream',
-        'app/streams/graph/graph_stream',
-        'app/streams/text/text_stream'
+        'ioviz/utils/errors',
+        'ioviz/utils/next_tick',
+        'ioviz/utils/tokenizer',
+        'ioviz/views/graph_view',
+        'ioviz/models/graph/adjacent_list',
+        'ioviz/models/graph/graph_interface',
+        'ioviz/streams/base/stream_base',
+        'ioviz/streams/graph/adjacent_list_stream',
+        'ioviz/streams/graph/graph_stream',
+        'ioviz/streams/text/text_stream'
     ], function () {
     });
 }());
