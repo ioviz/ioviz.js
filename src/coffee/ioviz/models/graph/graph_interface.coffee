@@ -1,7 +1,7 @@
 define(
   [
     "backbone"
-    "app/utils/errors"
+    "ioviz/utils/errors"
   ]
   (
     Backbone

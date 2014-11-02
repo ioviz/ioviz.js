@@ -1,6 +1,6 @@
 define(
   [
-    "app/streams/base/stream_base"
+    "ioviz/streams/base/stream_base"
   ]
   (
     StreamBase

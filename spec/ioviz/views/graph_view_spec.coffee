@@ -1,8 +1,8 @@
 describe "GraphView", ->
 
   load_modules(
-    "app/views/graph_view"
-    "app/models/graph/adjacent_list"
+    "ioviz/views/graph_view"
+    "ioviz/models/graph/adjacent_list"
   )
 
   context "create graph", ->

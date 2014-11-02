@@ -1,7 +1,7 @@
 define(
   [
-    "app/streams/base/stream_base"
-    "app/utils/next_tick"
+    "ioviz/streams/base/stream_base"
+    "ioviz/utils/next_tick"
   ]
   (
     StreamBase

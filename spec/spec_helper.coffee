@@ -1,7 +1,7 @@
 requirejs.config(
   baseUrl: "/"
   paths:
-    "app": "/src/coffee"
+    "ioviz": "/src/coffee/ioviz"
 )
 
 @expect = chai.expect

@@ -1,8 +1,8 @@
 describe "GraphInterface", ->
 
   load_modules(
-    "app/models/graph/graph_interface"
-    "app/utils/errors"
+    "ioviz/models/graph/graph_interface"
+    "ioviz/utils/errors"
   )
 
   context "create instance", ->

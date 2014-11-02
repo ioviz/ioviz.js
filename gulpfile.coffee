@@ -63,10 +63,10 @@ gulp.task "watch", ->
     ]
   )
 
-gulp.task "app", ->
+gulp.task "coffee", ->
   gulp.src ["src/coffee/**/*.coffee"]
     .pipe coffee()
-    .pipe gulp.dest("tmp/js/app/")
+    .pipe gulp.dest("tmp/js/")
 
 gulp.task "requirejs-config.js", ["bower"], ->
   requirejsConfig = require("./lib/requirejs-config")
@@ -86,7 +86,7 @@ gulp.task "require-all.js", ->
       "require-all.js"
       {
         baseUrl: "src/coffee"
-        prefix: "app"
+        prefix: "ioviz"
       }
     )
     .pipe gulp.dest("tmp/js/config/")
@@ -101,7 +101,7 @@ gulp.task "server", ["ioviz.test.js"], ->
   webServer = require("./lib/web_server")
   http.createServer(webServer).listen(19292)
 
-gulp.task "ioviz.test.js", ["app", "bower", "config"], ->
+gulp.task "ioviz.test.js", ["coffee", "bower", "config"], ->
   gulp.src(["tmp/js/**/*.js"])
     .pipe amdOptimize(
       "config/require-all"
@@ -112,7 +112,7 @@ gulp.task "ioviz.test.js", ["app", "bower", "config"], ->
     .pipe concat("ioviz.test.js")
     .pipe gulp.dest("tmp/js/test/")
 
-gulp.task "ioviz.js", ["app", "bower", "config"], ->
+gulp.task "ioviz.js", ["coffee", "bower", "config"], ->
   gulp.src(["tmp/js/**/*.js"])
     .pipe amdOptimize(
       "config/require-all"

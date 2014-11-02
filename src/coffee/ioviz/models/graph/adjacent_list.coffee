@@ -1,7 +1,7 @@
 define(
   [
     "underscore"
-    "app/models/graph/graph_interface"
+    "ioviz/models/graph/graph_interface"
   ]
   (
     _

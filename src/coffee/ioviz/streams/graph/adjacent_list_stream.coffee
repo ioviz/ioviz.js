@@ -1,9 +1,9 @@
 define(
   [
-    "app/streams/base/stream_base"
-    "app/models/graph/adjacent_list"
-    "app/utils/tokenizer"
-    "app/utils/next_tick"
+    "ioviz/streams/base/stream_base"
+    "ioviz/models/graph/adjacent_list"
+    "ioviz/utils/tokenizer"
+    "ioviz/utils/next_tick"
   ]
   (
     StreamBase

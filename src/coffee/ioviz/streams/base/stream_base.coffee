@@ -2,7 +2,7 @@ define(
   [
     "underscore"
     "backbone"
-    "app/utils/errors"
+    "ioviz/utils/errors"
   ]
   (
     _

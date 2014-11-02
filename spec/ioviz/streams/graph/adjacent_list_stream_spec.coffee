@@ -1,9 +1,9 @@
 describe "AdjacentListStream", ->
 
   load_modules(
-    "app/streams/graph/graph_stream"
-    "app/streams/graph/adjacent_list_stream"
-    "app/streams/base/stream_base"
+    "ioviz/streams/graph/graph_stream"
+    "ioviz/streams/graph/adjacent_list_stream"
+    "ioviz/streams/base/stream_base"
   )
 
   context "input indirected graph", ->
