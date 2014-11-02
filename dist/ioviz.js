@@ -576,7 +576,7 @@
     });
 }.call(this));
 (function () {
-    define('config/require-all', [
+    define('config/ioviz-require-all', [
         'ioviz/utils/errors',
         'ioviz/utils/next_tick',
         'ioviz/utils/tokenizer',
