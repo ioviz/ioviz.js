@@ -79,11 +79,11 @@ gulp.task "requirejs-config.js", ["bower"], ->
     )
     .pipe gulp.dest("tmp/js/config/")
 
-gulp.task "require-all.js", ->
+gulp.task "ioviz-require-all.js", ->
   requireAll = require("./lib/require-all")
   gulp.src ["src/coffee/**/*.coffee"]
     .pipe requireAll(
-      "require-all.js"
+      "ioviz-require-all.js"
       {
         baseUrl: "src/coffee"
       }
@@ -92,7 +92,7 @@ gulp.task "require-all.js", ->
 
 gulp.task "config", [
   "requirejs-config.js"
-  "require-all.js"
+  "ioviz-require-all.js"
 ]
 
 gulp.task "server", ["ioviz.test.js"], ->
@@ -103,7 +103,7 @@ gulp.task "server", ["ioviz.test.js"], ->
 gulp.task "ioviz.test.js", ["coffee", "bower", "config"], ->
   gulp.src(["tmp/js/**/*.js"])
     .pipe amdOptimize(
-      "config/require-all"
+      "config/ioviz-require-all"
       {
         configFile: "tmp/js/config/requirejs-config.js"
       }
@@ -114,7 +114,7 @@ gulp.task "ioviz.test.js", ["coffee", "bower", "config"], ->
 gulp.task "ioviz.js", ["coffee", "bower", "config"], ->
   gulp.src(["tmp/js/**/*.js"])
     .pipe amdOptimize(
-      "config/require-all"
+      "config/ioviz-require-all"
       {
         configFile: "tmp/js/config/requirejs-config.js"
         exclude: glob.sync("tmp/js/bower/*.js").map (module)->
